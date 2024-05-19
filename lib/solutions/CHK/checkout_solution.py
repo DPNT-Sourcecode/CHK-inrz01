@@ -78,17 +78,12 @@ def checkout(skus: str):
         offers = price_table[sku]['offers']
 
         for offer in sorted(offers, key=lambda x: -x.get('quantity', 0)):
-            while quantity >= offer.get('quantity', 0):
-                if 'price' in offer:
-                    total_price += offer['price']
-                    quantity -= offer['quantity']
-                elif 'free' in offer and basket.get(offer['free'], 0) == 1:
-                    basket[offer['free']] -= 1
-                    total_price -= price_table[offer['free']]['price']
-                quantity -= offer['quantity']
+            while 'free' in offer and quantity >= offer.get('quantity',
+                                                            0) and basket.get(offer['free'], 0) > 0:
 
         total_price += price * quantity
 
     return total_price
+
 
 
