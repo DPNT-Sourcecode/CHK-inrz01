@@ -31,15 +31,39 @@ Where:
  - param[0] = a String containing the SKUs of all the products in the basket
  - @return = an Integer representing the total checkout value of the items
 
+ROUND 2 - More offers
+The checkout feature is great and our supermarket is doing fine. Is time to think about growth.
+Our marketing teams wants to experiment with new offer types and we should do our best to support them.
+
+We are going to sell a new item E.
+Normally E costs 40, but if you buy 2 of Es you will get B free. How cool is that ? Multi-priced items also seemed to work well so we should have more of these.
+
+Our price table and offers:
++------+-------+------------------------+
+| Item | Price | Special offers         |
++------+-------+------------------------+
+| A    | 50    | 3A for 130, 5A for 200 |
+| B    | 30    | 2B for 45              |
+| C    | 20    |                        |
+| D    | 15    |                        |
+| E    | 40    | 2E get one B free      |
++------+-------+------------------------+
+
+
+Notes:
+ - The policy of the supermarket is to always favor the customer when applying special offers.
+ - All the offers are well balanced so that they can be safely combined.
+ - For any illegal input return -1
 """
 
 
 def checkout(skus: str):
     price_table = {
-        'A': {'price': 50, 'offer': {'quantity': 3, 'price': 130}},
-        'B': {'price': 30, 'offer': {'quantity': 2, 'price': 45}},
-        'C': {'price': 20, 'offer': {}},
-        'D': {'price': 15, 'offer': {}}
+        'A': {'price': 50, 'offers': [{'quantity': 3, 'price': 130}]},
+        'B': {'price': 30, 'offers': [{'quantity': 2, 'price': 45}]},
+        'C': {'price': 20, 'offers': []},
+        'D': {'price': 15, 'offers': []},
+        'E': {'price': 40, 'offers': [{'quantity': 2, 'free': 'B'}]}
     }
     if not skus:
         return 0
@@ -47,15 +71,20 @@ def checkout(skus: str):
         return -1
 
     total_price = 0
-    for sku in set(skus):
-        quantity = skus.count(sku)
+    basket = {sku: skus.count(sku) for sku in set(skus)}
+
+    for sku, quantity in basket.items():
         price = price_table[sku]['price']
-        offer = price_table[sku]['offer']
+        offers = price_table[sku]['offers']
 
-        while offer and quantity >= offer['quantity']:
-            total_price += offer['price']
-            quantity -= offer['quantity']
+        for offer in sorted(offers, key=lambda x: -x.get('quantity', 0)):
+            while quantity >= offer.get('quantity', 0):
+                if 'price' in offer:
+                    total_price += offer['price']
+                elif 'free' in offer and basket.get(offer['free'], 0) > 0:
+                    basket[offer['free']] -= 1
+                quantity -= offer['quantity']
 
-        total_price += quantity * price
+        total_price += price * quantity
 
     return total_price

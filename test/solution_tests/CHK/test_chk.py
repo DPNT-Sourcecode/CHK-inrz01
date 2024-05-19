@@ -7,7 +7,7 @@ class TestCheckout(unittest.TestCase):
         self.assertEqual(checkout(''), 0)
 
     def test_chk_invalid_sku(self):
-        self.assertEqual(checkout('E'), -1)
+        self.assertEqual(checkout('F'), -1)
 
     def test_chk_single_sku(self):
         self.assertEqual(checkout('A'), 50)
@@ -22,3 +22,7 @@ class TestCheckout(unittest.TestCase):
     def test_chk_sku_with_mixed_offer(self):
         self.assertEqual(checkout('ABB'), 95)
         self.assertEqual(checkout('CAAA'), 150)
+
+    def test_chk_sku_with_free_offer(self):
+        self.assertEqual(checkout('EE'), 80)
+        self.assertEqual(checkout('EEB'), 80)
