@@ -73,6 +73,7 @@ def checkout(skus: str):
 
     total_price = 0
     basket = {sku: skus.count(sku) for sku in set(skus)}
+    print(basket)
 
     for sku, quantity in basket.items():
         price = price_table[sku]['price']
@@ -94,3 +95,4 @@ def checkout(skus: str):
         total_price += price * quantity
 
     return total_price
+
