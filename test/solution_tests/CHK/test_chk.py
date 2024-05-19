@@ -15,3 +15,12 @@ class TestCheckout(unittest.TestCase):
         self.assertEqual(checkout('C'), 20)
         self.assertEqual(checkout('D'), 15)
 
+    def test_chk_sku_with_offer(self):
+        self.assertEqual(checkout('AAA'), 130)
+        self.assertEqual(checkout('BB'), 45)
+
+    def test_chk_sku_with_mixed_offer(self):
+        self.assertEqual(checkout('ABB'), 95)
+        self.assertEqual(checkout('CAAA'), 150)
+
+
