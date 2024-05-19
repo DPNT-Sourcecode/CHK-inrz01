@@ -34,17 +34,15 @@ Where:
 """
 
 
-def checkout(skus):
+def checkout(skus: str):
     price_table = {
         'A': {'price': 50, 'offer': {'quantity': 3, 'price': 130}},
         'B': {'price': 30, 'offer': {'quantity': 2, 'price': 45}},
         'C': {'price': 20, 'offer': {}},
         'D': {'price': 15, 'offer': {}}
     }
-    # Check if the input is empty
-    if not skus or not isinstance(skus, str):
-        return -1
-    # Check if the input contains only valid SKUs
+    if not skus:
+        return 0
     if not all(sku in price_table for sku in skus):
         return -1
 
@@ -61,5 +59,3 @@ def checkout(skus):
         total_price += quantity * price
 
     return total_price
-
-

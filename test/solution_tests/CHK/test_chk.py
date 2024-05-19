@@ -4,7 +4,7 @@ from lib.solutions.CHK.checkout_solution import checkout
 
 class TestCheckout(unittest.TestCase):
     def test_chk_empty_sku(self):
-        self.assertEqual(checkout(''), -1)
+        self.assertEqual(checkout(''), 0)
 
     def test_chk_invalid_sku(self):
         self.assertEqual(checkout('E'), -1)
@@ -22,5 +22,3 @@ class TestCheckout(unittest.TestCase):
     def test_chk_sku_with_mixed_offer(self):
         self.assertEqual(checkout('ABB'), 95)
         self.assertEqual(checkout('CAAA'), 150)
-
-
