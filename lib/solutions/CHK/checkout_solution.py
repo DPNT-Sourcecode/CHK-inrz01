@@ -59,7 +59,8 @@ Notes:
 
 def checkout(skus: str):
     price_table = {
-        'A': {'price': 50, 'offers': [{'quantity': 3, 'price': 130}, {'quantity': 5, 'price': 200}]},
+        'A': {'price': 50, 'offers': [{'quantity': 3, 'price': 130},
+                                      {'quantity': 5, 'price': 200}]},
         'B': {'price': 30, 'offers': [{'quantity': 2, 'price': 45}]},
         'C': {'price': 20, 'offers': []},
         'D': {'price': 15, 'offers': []},
@@ -78,12 +79,18 @@ def checkout(skus: str):
         offers = price_table[sku]['offers']
 
         for offer in sorted(offers, key=lambda x: -x.get('quantity', 0)):
-            while 'free' in offer and quantity >= offer.get('quantity',
-                                                            0) and basket.get(offer['free'], 0) > 0:
+            while 'free' in offer and \
+                    quantity >= offer.get('quantity', 0) and \
+                    basket.get(offer['free'], 0) > 0:
+                basket[offer['free']] -= 1
+                quantity -= offer['quantity']
+
+        for offer in sorted(offers, key=lambda x: -x.get('quantity', 0)):
+            while 'price' in offer and \
+                    quantity >= offer.get('quantity', 0):
+                total_price += offer['price']
+                quantity -= offer['quantity']
 
         total_price += price * quantity
 
     return total_price
-
-
-
