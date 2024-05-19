@@ -1,4 +1,3 @@
-
 # noinspection PyUnusedLocal
 # skus = unicode string
 """
@@ -33,19 +32,34 @@ Where:
  - @return = an Integer representing the total checkout value of the items
 
 """
+
+
 def checkout(skus):
+    price_table = {
+        'A': {'price': 50, 'offer': {'quantity': 3, 'price': 130}},
+        'B': {'price': 30, 'offer': {'quantity': 2, 'price': 45}},
+        'C': {'price': 20, 'offer': {}},
+        'D': {'price': 15, 'offer': {}}
+    }
     # Check if the input is empty
-    if not skus:
-        return -1
-    # Check if the input is a string
-    if not isinstance(skus, str):
+    if not skus or not isinstance(skus, str):
         return -1
     # Check if the input contains only valid SKUs
-    if not all(sku in 'ABCD' for sku in skus):
+    if not all(sku in price_table for sku in skus):
         return -1
-    # Check if the input contains only valid SKUs
-    if not all(skus.count(sku) == 1 for sku in skus):
-        return -1
-    return -1
+
+    total_price = 0
+    for sku in set(skus):
+        quantity = skus.count(sku)
+        price = price_table[sku]['price']
+        offer = price_table[sku]['offer']
+
+        while offer and quantity >= offer['quantity']:
+            total_price += offer['price']
+            quantity -= offer['quantity']
+
+        total_price += quantity * price
+
+    return total_price
 
 
