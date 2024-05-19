@@ -81,11 +81,14 @@ def checkout(skus: str):
             while quantity >= offer.get('quantity', 0):
                 if 'price' in offer:
                     total_price += offer['price']
+                    quantity -= offer['quantity']
                 elif 'free' in offer and basket.get(offer['free'], 0) == 1:
                     basket[offer['free']] -= 1
+                    total_price -= price_table[offer['free']]['price']
                 quantity -= offer['quantity']
 
         total_price += price * quantity
 
     return total_price
+
 
